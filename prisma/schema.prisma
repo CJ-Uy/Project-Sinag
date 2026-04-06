@@ -1,16 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model ModeratorCredentials {
@@ -32,10 +27,19 @@ model Report {
 
   timeOfReport DateTime @default(now())
   description  String?
-  imageUrl     String[]
+  images       ReportImage[]
   tags         Tag[]
 
   hidden Boolean @default(false)
+}
+
+model ReportImage {
+  id       String @id @default(uuid())
+  url      String
+  report   Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId String
+
+  @@index([reportId])
 }
 
 model Tag {

@@ -1,19 +1,16 @@
-import { prisma } from "@/app/utils/prisma";
+import { getPrisma } from "@/app/utils/prisma";
 import { NextResponse } from "next/server";
 
-// This function was partially made with Gen AI
 export async function POST(request) {
   const data = await request.json();
-
-  const { lat, lon, timeOfReport, description } = data;
+  const { lat, lon } = data;
 
   const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${Number.parseFloat(
-      lat
-    )},${Number.parseFloat(lon)}&key=${process.env.NEXT_PUBLIC_GOOGLE_API}`
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${Number.parseFloat(lat)},${Number.parseFloat(lon)}&key=${process.env.NEXT_PUBLIC_GOOGLE_API}`
   );
   const cityData = await response.json();
 
+  const prisma = await getPrisma();
   const sos = await prisma.report.create({
     data: {
       lat: Number.parseFloat(data.lat),
@@ -23,16 +20,17 @@ export async function POST(request) {
     },
   });
 
+  await prisma.reportImage.create({
+    data: {
+      url: `/api/files/SOS.gif`,
+      reportId: sos.id,
+    },
+  });
+
   return NextResponse.json(
-    await prisma.report.update({
-      where: {
-        id: sos.id,
-      },
-      data: {
-        imageUrl: {
-          push: "https://3ufbik4jemsztogi.public.blob.vercel-storage.com/SOS-HP9PzARKPmGRAfYB3tL7YfPMM2PXir.gif",
-        },
-      },
+    await prisma.report.findFirst({
+      where: { id: sos.id },
+      include: { images: true },
     })
   );
 }

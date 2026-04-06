@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "prisma generate && opennextjs-cloudflare build",
+    "deploy": "opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare preview",
+    "lint": "next lint",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
+    "@prisma/adapter-d1": "^6.4.1",
     "@prisma/client": "^6.4.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -38,7 +41,6 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@react-google-maps/api": "^2.20.6",
-    "@vercel/blob": "^0.27.1",
     "@vis.gl/react-google-maps": "^1.5.1",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
@@ -66,13 +68,15 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@iconify-json/material-symbols": "^1.2.14",
+    "@opennextjs/cloudflare": "^1.18.0",
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "postcss": "^8",
     "prisma": "^6.4.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "wrangler": "^4.80.0"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
