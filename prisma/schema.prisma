@@ -36,8 +36,10 @@ model Report {
 model ReportImage {
   id       String @id @default(uuid())
   url      String
-  report   Report @relation(fields: [reportId], references: [id])
+  report   Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
   reportId String
+
+  @@index([reportId])
 }
 
 model Tag {
