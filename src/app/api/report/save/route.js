@@ -32,7 +32,7 @@ export async function POST(request) {
     await env.BUCKET.put(key, file.stream(), {
       httpMetadata: { contentType: file.type },
     });
-    const publicUrl = `${process.env.R2_PUBLIC_URL}/${key}`;
+    const publicUrl = `/api/files/${key}`;
     await prisma.reportImage.create({
       data: { url: publicUrl, reportId: report.id },
     });
