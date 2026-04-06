@@ -8,7 +8,7 @@
   "name": "project-sinag",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-03-17",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public", "unsafe_eval"],
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets",
