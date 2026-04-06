@@ -1,0 +1,43 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "account_id": "8527ec1369d46f55304a6f59ab5356e4",
+  "name": "project-sinag",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-03-17",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets",
+  },
+  "images": {
+    // Enable image optimization
+    "binding": "IMAGES",
+  },
+  "services": [
+    {
+      // Self-reference service binding for caching
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "project-sinag",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "project-sinag",
+    },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "project-sinag",
+      "database_id": "84919780-2da0-43b5-9983-d0b50b148197",
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+}
