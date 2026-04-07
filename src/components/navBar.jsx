@@ -33,7 +33,7 @@ export default function NavBar() {
         {/* TODO: Make connect this to he hotlines dialog opening */}
         <div>
           <svg
-            onClick={setVisible}
+            onClick={() => setVisible(true)}
             xmlns="http://www.w3.org/2000/svg"
             className="text-white w-8 h-8 m-5"
             viewBox="0 0 24 24"

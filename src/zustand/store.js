@@ -63,7 +63,7 @@ export const useGetLocationData = create((set) => ({
 
       // Get country code
       const { data: countryDataResponse } = await axios.get(
-        `http://api.geonames.org/countryCodeJSON?lat=${coordinates.latitude}&lng=${coordinates.longitude}&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
+        `https://api.geonames.org/countryCodeJSON?lat=${coordinates.latitude}&lng=${coordinates.longitude}&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
       );
       const countryCode = countryDataResponse.countryCode;
 
