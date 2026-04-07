@@ -1,4 +1,3 @@
-import axios from "axios";
 import { create } from "zustand";
 
 // Form data for uploading
@@ -61,16 +60,11 @@ export const useGetLocationData = create((set) => ({
         longitude: position.coords.longitude,
       };
 
-      // Get country code
-      const { data: countryDataResponse } = await axios.get(
-        `https://api.geonames.org/countryCodeJSON?lat=${coordinates.latitude}&lng=${coordinates.longitude}&username=${process.env.NEXT_PUBLIC_GEONAMES_USERNAME}`
-      );
-      const countryCode = countryDataResponse.countryCode;
-
-      // Get emergency numbers
+      // Get emergency numbers (server handles geonames lookup)
       const emergencyResponse = await fetch("/api/hotlines", {
         method: "POST",
-        body: JSON.stringify({ countryCode }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lat: coordinates.latitude, lon: coordinates.longitude }),
       });
       const emergencyNumbers = await emergencyResponse.json();
 
@@ -79,7 +73,6 @@ export const useGetLocationData = create((set) => ({
         ...initialState,
         loading: false,
         locationCoordinates: coordinates,
-        locationCountryCode: countryCode,
         locationEmergencyNumbers: emergencyNumbers,
       });
 
