@@ -31,7 +31,7 @@ const HideScrollbarStyles = () => (
   `}</style>
 );
 
-export default function ReportMap() {
+export default function ReportMap({ apiKey, mapId }) {
   const [allReports, setAllReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedReport, setSelectedReport] = useState(null);
@@ -122,12 +122,12 @@ export default function ReportMap() {
   return (
     <>
       <APIProvider
-        apiKey={process.env.NEXT_PUBLIC_GOOGLE_API}
+        apiKey={apiKey}
         libraries={["marker"]}
         onLoad={() => console.log("Maps API has loaded.")}
       >
         <GoogleMap
-          mapId={process.env.NEXT_PUBLIC_REPORTS_GOOGLE_MAP_ID_RETRO || process.env.NEXT_PUBLIC_REPORTS_GOOGLE_MAP_ID}
+          mapId={mapId}
           defaultZoom={13}
           defaultCenter={{ lat: 14.641, lng: 121.1 }}
           onCameraChanged={(ev) =>
