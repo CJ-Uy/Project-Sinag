@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
-import { getPrisma } from "@/app/utils/prisma";
+import { getDB } from "@/app/utils/db";
+import { report } from "@/app/utils/schema";
+import { eq } from "drizzle-orm";
 
 export async function POST(request) {
-  const data = await request.json();
-  const prisma = await getPrisma();
-  const hiddenReport = await prisma.report.update({
-    where: { id: data.id },
-    data: { hidden: false },
-  });
-  return NextResponse.json(hiddenReport);
+  const { id } = await request.json();
+  const db = await getDB();
+  const [updated] = await db
+    .update(report)
+    .set({ hidden: false })
+    .where(eq(report.id, id))
+    .returning();
+  return NextResponse.json(updated);
 }

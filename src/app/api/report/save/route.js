@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
-import { getPrisma } from "@/app/utils/prisma";
+import { getDB } from "@/app/utils/db";
+import { report, reportImage } from "@/app/utils/schema";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+
+function uuid() {
+  return crypto.randomUUID();
+}
 
 export async function POST(request) {
   const { env } = await getCloudflareContext({ async: true });
@@ -10,33 +15,34 @@ export async function POST(request) {
   const data = Object.fromEntries(formData);
   const { lat, lon, timeOfReport, description } = data;
 
-  const response = await fetch(
+  const geocodeResponse = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${Number.parseFloat(lat)},${Number.parseFloat(lon)}&key=${apiKey}`
   );
-  const cityData = await response.json();
+  const cityData = await geocodeResponse.json();
 
-  const prisma = await getPrisma();
+  const db = await getDB();
+  const reportId = uuid();
 
-  const report = await prisma.report.create({
-    data: {
-      lat: Number.parseFloat(lat),
-      lon: Number.parseFloat(lon),
-      description,
-      timeOfReport,
-      location: cityData?.results[1]?.formatted_address || "Location not found",
-    },
+  await db.insert(report).values({
+    id: reportId,
+    lat: Number.parseFloat(lat),
+    lon: Number.parseFloat(lon),
+    description,
+    timeOfReport,
+    location: cityData?.results[1]?.formatted_address || "Location not found",
   });
 
   const files = formData.getAll("files");
   for (const file of files) {
     const originalExtension = file.name.split(".").pop();
-    const key = `${report.id}.${originalExtension}`;
+    const key = `${reportId}.${originalExtension}`;
     await env.BUCKET.put(key, file.stream(), {
       httpMetadata: { contentType: file.type },
     });
-    const publicUrl = `/api/files/${key}`;
-    await prisma.reportImage.create({
-      data: { url: publicUrl, reportId: report.id },
+    await db.insert(reportImage).values({
+      id: uuid(),
+      url: `/api/files/${key}`,
+      reportId,
     });
   }
 
