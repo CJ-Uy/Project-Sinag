@@ -29,7 +29,7 @@ export async function POST(request) {
 
   await db.insert(reportImage).values({
     id: crypto.randomUUID(),
-    url: "/api/files/SOS.gif",
+    url: "/sos.gif",
     reportId: sosId,
   });
 
