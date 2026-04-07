@@ -7,7 +7,6 @@ import {
   AdvancedMarker,
   ControlPosition,
 } from "@vis.gl/react-google-maps";
-import Image from "next/image";
 import {
   Drawer,
   DrawerContent,
@@ -165,8 +164,7 @@ export default function ReportMap({ apiKey, mapId }) {
                   style={{ transform: "translate(calc(-50% + 7.5px), -100%)" }}
                 >
                   <div className="custom-marker">
-                    <Image
-                      priority
+                    <img
                       src={report.imageUrl[0]}
                       alt="Loading..."
                       width={100}
